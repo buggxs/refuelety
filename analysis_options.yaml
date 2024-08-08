@@ -145,4 +145,3 @@ linter:
 
     # pub
     - package_names
-    - sort_pub_dependencies
