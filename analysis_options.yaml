@@ -22,8 +22,6 @@ analyzer:
     # ignore todos
     todo: ignore
 
-    import_of_legacy_library_into_null_safe: ignore
-
 linter:
   # The lint rules applied to this project can be customized in the
   # section below to disable rules from the `package:flutter_lints/flutter.yaml`
