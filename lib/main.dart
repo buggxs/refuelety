@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:refuelety/core/app_service_locator.dart';
 
 void main() {
+  // Register services and logging
+  setup();
+
+  // Start the app
   runApp(const MyApp());
 }
 
