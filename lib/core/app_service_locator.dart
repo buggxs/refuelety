@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
-import 'package:refuelety/api/fuel_price/fuel_service.dart';
+import 'package:refuelety/api/api.dart';
 
 final GetIt app = GetIt.instance;
 
@@ -17,5 +17,7 @@ void setup() {
     );
   });
 
-  app.registerFactory<FuelService>(OnlineFuelService.new);
+  app
+    ..registerFactory<FuelService>(OnlineFuelService.new)
+    ..registerFactory<GeoService>(OnlineGeoService.new);
 }

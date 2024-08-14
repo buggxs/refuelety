@@ -1,24 +1,33 @@
 import 'package:geolocator/geolocator.dart';
 
-class GeoService {
-  Future<void> checkPermission() async {
+abstract class GeoService {
+  Future<bool> checkPermission();
+  Future<Position> getPosition();
+  Stream<Position> getPositionStream();
+  double calculateDistance(Position position, double lat, double lng);
+}
+
+class OnlineGeoService implements GeoService {
+  @override
+  Future<bool> checkPermission() async {
     final LocationPermission permission = await Geolocator.checkPermission();
     final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (permission == LocationPermission.denied) {
-      throw Exception('Location permission is denied');
+      return false;
     }
     if (!serviceEnabled) {
-      throw Exception('Location service is disabled');
+      return false;
     }
+    return true;
   }
 
+  @override
   Future<Position> getPosition() async {
-    checkPermission();
     return Geolocator.getCurrentPosition();
   }
 
+  @override
   Stream<Position> getPositionStream() {
-    checkPermission();
     return Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
@@ -27,6 +36,7 @@ class GeoService {
     );
   }
 
+  @override
   double calculateDistance(Position position, double lat, double lng) {
     return Geolocator.distanceBetween(
       position.latitude,
