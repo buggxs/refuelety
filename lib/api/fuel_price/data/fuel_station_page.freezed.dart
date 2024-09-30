@@ -26,9 +26,13 @@ mixin _$FuelStationPage<T> {
   bool get ok => throw _privateConstructorUsedError;
   List<T>? get stations => throw _privateConstructorUsedError;
 
+  /// Serializes this FuelStationPage to a JSON map.
   Map<String, dynamic> toJson(Object? Function(T) toJsonT) =>
       throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FuelStationPage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FuelStationPageCopyWith<T, FuelStationPage<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -52,6 +56,8 @@ class _$FuelStationPageCopyWithImpl<T, $Res, $Val extends FuelStationPage<T>>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FuelStationPage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -100,6 +106,8 @@ class __$$FuelStationPageImplCopyWithImpl<T, $Res>
       $Res Function(_$FuelStationPageImpl<T>) _then)
       : super(_value, _then);
 
+  /// Create a copy of FuelStationPage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -172,12 +180,14 @@ class _$FuelStationPageImpl<T> implements _FuelStationPage<T> {
             const DeepCollectionEquality().equals(other._stations, _stations));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, status, message, ok,
       const DeepCollectionEquality().hash(_stations));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FuelStationPage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FuelStationPageImplCopyWith<T, _$FuelStationPageImpl<T>> get copyWith =>
@@ -209,8 +219,11 @@ abstract class _FuelStationPage<T> implements FuelStationPage<T> {
   bool get ok;
   @override
   List<T>? get stations;
+
+  /// Create a copy of FuelStationPage
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FuelStationPageImplCopyWith<T, _$FuelStationPageImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }

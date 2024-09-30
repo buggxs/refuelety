@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 import 'package:refuelety/api/fuel_price/data/fuel_station.dart';
 import 'package:refuelety/api/fuel_price/data/fuel_station_page.dart';
 import 'package:refuelety/api/fuel_price/data/fuel_type.dart';
+import 'package:refuelety/env/env.dart';
 import 'package:refuelety/misc/logger.dart';
 
 abstract class FuelService {
@@ -39,7 +40,7 @@ class OnlineFuelService with LoggerMixin implements FuelService {
       'sort': sort,
       'type': type.name,
       // TODO: store the apikey somehow secure
-      'apikey': '8c2d751f-652c-0dac-111b-440cd20c2464',
+      'apikey': Env.tankerKoenigApiKey,
     };
     final Uri url = Uri.https(
       'creativecommons.tankerkoenig.de',
