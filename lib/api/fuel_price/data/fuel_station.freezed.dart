@@ -35,8 +35,12 @@ mixin _$FuelStation {
   String? get houseNumber => throw _privateConstructorUsedError;
   int? get postCode => throw _privateConstructorUsedError;
 
+  /// Serializes this FuelStation to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FuelStation
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FuelStationCopyWith<FuelStation> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -74,6 +78,8 @@ class _$FuelStationCopyWithImpl<$Res, $Val extends FuelStation>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FuelStation
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -186,6 +192,8 @@ class __$$FuelStationImplCopyWithImpl<$Res>
       _$FuelStationImpl _value, $Res Function(_$FuelStationImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FuelStation
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -344,12 +352,14 @@ class _$FuelStationImpl implements _FuelStation {
                 other.postCode == postCode));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, brand, street, place,
       lat, lng, dist, diesel, e5, e10, isOpen, houseNumber, postCode);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FuelStation
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FuelStationImplCopyWith<_$FuelStationImpl> get copyWith =>
@@ -411,8 +421,11 @@ abstract class _FuelStation implements FuelStation {
   String? get houseNumber;
   @override
   int? get postCode;
+
+  /// Create a copy of FuelStation
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FuelStationImplCopyWith<_$FuelStationImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
