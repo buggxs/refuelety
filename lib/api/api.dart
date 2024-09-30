@@ -1,4 +1,4 @@
-library api;
+library;
 
 export 'package:refuelety/api/fuel_price/data/fuel_station.dart';
 export 'package:refuelety/api/fuel_price/data/fuel_station_page.dart';
