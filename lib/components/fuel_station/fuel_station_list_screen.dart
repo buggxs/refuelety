@@ -5,6 +5,7 @@ import 'package:refuelety/core/app_service_locator.dart';
 
 class FuelStationListScreen extends StatefulWidget {
   const FuelStationListScreen({super.key});
+  static String routeName = const FuelStationListScreen().toString();
 
   @override
   // ignore: library_private_types_in_public_api
