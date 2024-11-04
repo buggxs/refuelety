@@ -1,7 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 
 abstract class GeoService {
-  
+  Future<bool> checkPermission();
   Future<Position> getPosition();
   Stream<Position> getPositionStream();
   double calculateDistance(Position position, double lat, double lng);
@@ -9,7 +9,20 @@ abstract class GeoService {
 
 class OnlineGeoService implements GeoService {
   @override
-  
+  Future<bool> checkPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    final bool isServiceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    if (!isServiceEnabled) {
+      permission = await Geolocator.requestPermission();
+    } else if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.deniedForever) {
+      return false;
+    }
+    return true;
+  }
 
   @override
   Future<Position> getPosition() async {

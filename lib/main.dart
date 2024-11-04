@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: Implement routing
     return BlocProvider<ManageGeoCubit>(
-      create: (BuildContext context) => ManageGeoCubit()..checkPermission(),
+      create: (BuildContext context) => ManageGeoCubit(),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -48,37 +48,28 @@ class _TestCubitState extends State<TestCubit> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ManageGeoCubit, ManageGeoState>(
-      builder: (BuildContext context, ManageGeoState state) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Flutter Demo'),
-          ),
-          body: Center(
-            child: state.when(
-              initial: () => const Text('Initial'),
-              loading: () => const CircularProgressIndicator(),
-              success: (Stream<Position> position) {
-                return StreamBuilder<Position>(
-                  stream: position,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<Position> snapshot) {
-                    if (snapshot.hasData) {
-                      return Text('Position: ${snapshot.data}');
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      return const CircularProgressIndicator();
-                    }
-                  },
-                );
+    final ManageGeoCubit cubit = context.watch<ManageGeoCubit>();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Flutter Demo'),
+      ),
+      body: Center(
+        child: cubit.state.when(
+          initial: () => const Text('Initial'),
+          loading: () => const CircularProgressIndicator(),
+          success: (Stream<Position> position) {
+            return StreamBuilder<Position>(
+              stream: position,
+              builder:
+                  (BuildContext context, AsyncSnapshot<Position> snapshot) {
+                return Text('Position: ${snapshot.data}');
               },
-              permissionDenied: () => const Text('Permission Denied'),
-              error: (String message) => Text('Error: $message'),
-            ),
-          ),
-        );
-      },
+            );
+          },
+          permissionDenied: () => const Text('Permission Denied'),
+          error: (String message) => Text('Error: $message'),
+        ),
+      ),
     );
   }
 }
