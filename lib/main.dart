@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:refuelety/components/map_view/map_screen.dart';
 import 'package:refuelety/core/app_service_locator.dart';
 
-
 void main() {
   setup();
   runApp(const MyApp());
