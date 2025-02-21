@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:refuelety/components/map_view/map_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:refuelety/core/app_service_locator.dart';
+import 'package:refuelety/features/geo/cubit/manage_geo_cubit.dart';
 
 void main() {
   setup();
@@ -12,12 +15,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.green[700],
+    // TODO: Implement routing
+    return BlocProvider<ManageGeoCubit>(
+      create: (BuildContext context) => ManageGeoCubit(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorSchemeSeed: Colors.green[700],
+        ),
+        home: const MapScreen(),
       ),
-      home: const MapScreen(),
     );
   }
 }

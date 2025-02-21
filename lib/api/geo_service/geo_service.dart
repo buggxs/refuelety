@@ -10,12 +10,15 @@ abstract class GeoService {
 class OnlineGeoService implements GeoService {
   @override
   Future<bool> checkPermission() async {
-    final LocationPermission permission = await Geolocator.checkPermission();
-    final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (permission == LocationPermission.denied) {
-      return false;
+    LocationPermission permission = await Geolocator.checkPermission();
+    final bool isServiceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    if (!isServiceEnabled) {
+      permission = await Geolocator.requestPermission();
+    } else if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
     }
-    if (!serviceEnabled) {
+    if (permission == LocationPermission.deniedForever) {
       return false;
     }
     return true;
