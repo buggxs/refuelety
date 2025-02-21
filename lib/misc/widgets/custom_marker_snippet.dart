@@ -1,9 +1,9 @@
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:ui' as ui;
 import 'package:refuelety/api/api.dart';
 
 class CustomMarkerGenerator {
@@ -30,7 +30,11 @@ class CustomMarkerGenerator {
       ..lineTo(width / 2 + 50, height - 30) // Ende oben rechts vom Dreieck
       ..lineTo(width - 20, height - 30) // Obere rechte Ecke
       ..quadraticBezierTo(
-          width, height - 30, width, height - 40) // Gerundete Ecke
+        width,
+        height - 30,
+        width,
+        height - 40,
+      ) // Gerundete Ecke
       ..lineTo(width, 20) // Rechte Seite
       ..quadraticBezierTo(width, 0, width - 20, 0) // Gerundete Ecke
       ..lineTo(20, 0) // Obere Seite
@@ -76,7 +80,7 @@ class CustomMarkerGenerator {
 
     // Zeichne den Diesel-Preis
     if (station.diesel != null) {
-      final TextPainter priceText = TextPainter(
+      TextPainter(
         text: TextSpan(
           children: <TextSpan>[
             const TextSpan(
@@ -138,6 +142,6 @@ class CustomMarkerGenerator {
       format: ui.ImageByteFormat.png,
     );
 
-    return BitmapDescriptor.fromBytes(pngBytes!.buffer.asUint8List());
+    return BitmapDescriptor.bytes(pngBytes!.buffer.asUint8List());
   }
 }

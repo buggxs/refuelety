@@ -1,16 +1,14 @@
-
 import 'package:flutter/material.dart';
 import 'package:refuelety/api/api.dart';
 
 class StationInfoWindow extends StatelessWidget {
-  final FuelStation station;
-  final VoidCallback? onClose;
-
   const StationInfoWindow({
     super.key,
     required this.station,
     this.onClose,
   });
+  final FuelStation station;
+  final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +30,10 @@ class StationInfoWindow extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+              children: <Widget>[
                 Expanded(
                   child: Text(
                     station.name ?? 'Unbekannte Tankstelle',
@@ -64,7 +62,8 @@ class StationInfoWindow extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '${station.street} ${station.houseNumber}, ${station.postCode} ${station.place}',
+              '${station.street} ${station.houseNumber}, ${station.postCode}'
+              ' ${station.place}',
               style: TextStyle(
                 color: Colors.grey[600],
                 fontSize: 14,
@@ -77,25 +76,22 @@ class StationInfoWindow extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+              children: <Widget>[
                 Row(
-                  children: [
+                  children: <Widget>[
                     Icon(
                       station.isOpen == true
                           ? Icons.check_circle
                           : Icons.cancel,
-                      color: station.isOpen == true
-                          ? Colors.green
-                          : Colors.red,
+                      color: station.isOpen == true ? Colors.green : Colors.red,
                       size: 16,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       station.isOpen == true ? 'Geöffnet' : 'Geschlossen',
                       style: TextStyle(
-                        color: station.isOpen == true
-                            ? Colors.green
-                            : Colors.red,
+                        color:
+                            station.isOpen == true ? Colors.green : Colors.red,
                       ),
                     ),
                   ],
@@ -135,7 +131,7 @@ class StationInfoWindow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+        children: <Text>[
           Text(
             label,
             style: const TextStyle(fontSize: 16),

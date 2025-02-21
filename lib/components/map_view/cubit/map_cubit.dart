@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:refuelety/api/api.dart';
 import 'package:refuelety/misc/widgets/custom_marker_snippet.dart';
@@ -8,15 +8,14 @@ import 'package:refuelety/misc/widgets/custom_marker_snippet.dart';
 part 'map_state.dart';
 
 class MapCubit extends Cubit<MapState> {
-  final FuelService _fuelService;
-
   MapCubit(this._fuelService) : super(MapState());
+  final FuelService _fuelService;
 
   void selectStation(FuelStation? station, [LatLng? location]) {
     emit(state.copyWith(
       selectedStation: station,
       selectedLocation: location,
-    ));
+    ),);
   }
 
   Future<void> loadFuelStations({
@@ -26,17 +25,19 @@ class MapCubit extends Cubit<MapState> {
     emit(state.copyWith(isLoading: true, error: null));
 
     try {
-      final response = await _fuelService.getFuelStationInRadius(
+      final FuelStationPage<FuelStation> response =
+          await _fuelService.getFuelStationInRadius(
         lat: location.latitude,
         lng: location.longitude,
         radius: radius,
       );
 
       if (response.ok && response.stations != null) {
-        final markers = await Future.wait(
-          response.stations!.map((station) async {
+        final List<Marker> markers = await Future.wait(
+          response.stations!.map((FuelStation station) async {
             // Erstelle custom marker für jede Station
-            final customMarker = await CustomMarkerGenerator().createCustomMarker(station);
+            final BitmapDescriptor customMarker =
+                await CustomMarkerGenerator().createCustomMarker(station);
 
             return Marker(
               markerId: MarkerId(station.id ?? 'unknown'),
@@ -45,7 +46,10 @@ class MapCubit extends Cubit<MapState> {
                 station.lng ?? 0.0,
               ),
               icon: customMarker,
-              anchor: const Offset(0.5, 1.0), // Setzt den Ankerpunkt an die untere Mitte
+              anchor: const Offset(
+                0.5,
+                1,
+              ), // Setzt den Ankerpunkt an die untere Mitte
               onTap: () {
                 selectStation(
                   station,
@@ -56,22 +60,28 @@ class MapCubit extends Cubit<MapState> {
           }),
         );
 
-        emit(state.copyWith(
-          isLoading: false,
-          markers: markers.toSet(),
-          stations: response.stations,
-        ));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            markers: markers.toSet(),
+            stations: response.stations,
+          ),
+        );
       } else {
-        emit(state.copyWith(
-          isLoading: false,
-          error: response.message ?? 'Fehler beim Laden der Tankstellen',
-        ));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            error: response.message ?? 'Fehler beim Laden der Tankstellen',
+          ),
+        );
       }
     } catch (e) {
-      emit(state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          error: e.toString(),
+        ),
+      );
     }
   }
 }

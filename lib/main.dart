@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:refuelety/components/map_view/map_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:refuelety/components/map_view/map_screen.dart';
 import 'package:refuelety/core/app_service_locator.dart';
 import 'package:refuelety/features/geo/cubit/manage_geo_cubit.dart';
 

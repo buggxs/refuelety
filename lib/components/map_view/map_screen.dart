@@ -44,11 +44,11 @@ class _MapViewState extends State<MapView> {
       appBar: AppBar(
         title: const Text('Tankstellen Map'),
         elevation: 2,
-        actions: [
+        actions: <IconButton>[
           IconButton(
             icon: const Icon(Icons.list_alt),
             onPressed: () {
-              print('Zur Listenansicht wechseln');
+              // TODO: implement switch to list view
             },
           ),
         ],

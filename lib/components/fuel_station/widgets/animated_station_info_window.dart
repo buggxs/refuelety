@@ -1,19 +1,18 @@
-
 import 'package:flutter/material.dart';
 import 'package:refuelety/api/api.dart';
 import 'package:refuelety/components/fuel_station/widgets/station_info_window.dart';
 
 class AnimatedStationInfoWindow extends StatefulWidget {
-  final FuelStation station;
-  final VoidCallback? onClose;
-  final bool isVisible;
-
   const AnimatedStationInfoWindow({
     super.key,
     required this.station,
     required this.isVisible,
     this.onClose,
   });
+
+  final FuelStation station;
+  final VoidCallback? onClose;
+  final bool isVisible;
 
   @override
   State<AnimatedStationInfoWindow> createState() =>
@@ -37,18 +36,22 @@ class _AnimatedStationInfoWindowState extends State<AnimatedStationInfoWindow>
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 1), // Startet von unten außerhalb des Bildschirms
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOutCubic,
+      ),
+    );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeIn,
-    ));
+      begin: 0,
+      end: 1,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeIn,
+      ),
+    );
 
     if (widget.isVisible) {
       _controller.forward();
@@ -77,7 +80,7 @@ class _AnimatedStationInfoWindowState extends State<AnimatedStationInfoWindow>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _controller,
-      builder: (context, child) {
+      builder: (_, __) {
         return Positioned(
           bottom: 20,
           left: 20,

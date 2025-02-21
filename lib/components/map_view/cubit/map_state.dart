@@ -1,21 +1,21 @@
 part of 'map_cubit.dart';
 
 class MapState {
+  MapState({
+    this.isLoading = false,
+    this.markers = const <Marker>{},
+    this.stations = const <FuelStation>[],
+    this.error,
+    this.selectedStation,
+    this.selectedLocation,
+  });
+
   final bool isLoading;
   final Set<Marker> markers;
   final List<FuelStation> stations;
   final String? error;
   final FuelStation? selectedStation;
   final LatLng? selectedLocation;
-
-  MapState({
-    this.isLoading = false,
-    this.markers = const {},
-    this.stations = const [],
-    this.error,
-    this.selectedStation,
-    this.selectedLocation,
-  });
 
   MapState copyWith({
     bool? isLoading,
@@ -37,7 +37,9 @@ class MapState {
 
   @override
   bool operator ==(Object other) {
-    if (identical(this, other)) return true;
+    if (identical(this, other)) {
+      return true;
+    }
 
     return other is MapState &&
         other.isLoading == isLoading &&
