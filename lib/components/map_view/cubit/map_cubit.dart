@@ -12,10 +12,12 @@ class MapCubit extends Cubit<MapState> {
   final FuelService _fuelService;
 
   void selectStation(FuelStation? station, [LatLng? location]) {
-    emit(state.copyWith(
-      selectedStation: station,
-      selectedLocation: location,
-    ),);
+    emit(
+      state.copyWith(
+        selectedStation: station,
+        selectedLocation: location,
+      ),
+    );
   }
 
   Future<void> loadFuelStations({

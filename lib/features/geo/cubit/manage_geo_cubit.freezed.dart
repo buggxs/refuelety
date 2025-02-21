@@ -20,7 +20,9 @@ mixin _$ManageGeoState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Stream<Position> position) success,
+    required TResult Function(
+            Stream<Position>? position, Position? currentPosition)
+        success,
     required TResult Function() permissionDenied,
     required TResult Function(String message) error,
   }) =>
@@ -29,7 +31,8 @@ mixin _$ManageGeoState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Stream<Position> position)? success,
+    TResult? Function(Stream<Position>? position, Position? currentPosition)?
+        success,
     TResult? Function()? permissionDenied,
     TResult? Function(String message)? error,
   }) =>
@@ -38,7 +41,8 @@ mixin _$ManageGeoState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Stream<Position> position)? success,
+    TResult Function(Stream<Position>? position, Position? currentPosition)?
+        success,
     TResult Function()? permissionDenied,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -48,7 +52,7 @@ mixin _$ManageGeoState {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
+    required TResult Function(ManageGeoSuccessState value) success,
     required TResult Function(_PermissionDenied value) permissionDenied,
     required TResult Function(_Error value) error,
   }) =>
@@ -57,7 +61,7 @@ mixin _$ManageGeoState {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
+    TResult? Function(ManageGeoSuccessState value)? success,
     TResult? Function(_PermissionDenied value)? permissionDenied,
     TResult? Function(_Error value)? error,
   }) =>
@@ -66,7 +70,7 @@ mixin _$ManageGeoState {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
+    TResult Function(ManageGeoSuccessState value)? success,
     TResult Function(_PermissionDenied value)? permissionDenied,
     TResult Function(_Error value)? error,
     required TResult orElse(),
@@ -144,7 +148,9 @@ class _$InitialImpl with DiagnosticableTreeMixin implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Stream<Position> position) success,
+    required TResult Function(
+            Stream<Position>? position, Position? currentPosition)
+        success,
     required TResult Function() permissionDenied,
     required TResult Function(String message) error,
   }) {
@@ -156,7 +162,8 @@ class _$InitialImpl with DiagnosticableTreeMixin implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Stream<Position> position)? success,
+    TResult? Function(Stream<Position>? position, Position? currentPosition)?
+        success,
     TResult? Function()? permissionDenied,
     TResult? Function(String message)? error,
   }) {
@@ -168,7 +175,8 @@ class _$InitialImpl with DiagnosticableTreeMixin implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Stream<Position> position)? success,
+    TResult Function(Stream<Position>? position, Position? currentPosition)?
+        success,
     TResult Function()? permissionDenied,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -184,7 +192,7 @@ class _$InitialImpl with DiagnosticableTreeMixin implements _Initial {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
+    required TResult Function(ManageGeoSuccessState value) success,
     required TResult Function(_PermissionDenied value) permissionDenied,
     required TResult Function(_Error value) error,
   }) {
@@ -196,7 +204,7 @@ class _$InitialImpl with DiagnosticableTreeMixin implements _Initial {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
+    TResult? Function(ManageGeoSuccessState value)? success,
     TResult? Function(_PermissionDenied value)? permissionDenied,
     TResult? Function(_Error value)? error,
   }) {
@@ -208,7 +216,7 @@ class _$InitialImpl with DiagnosticableTreeMixin implements _Initial {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
+    TResult Function(ManageGeoSuccessState value)? success,
     TResult Function(_PermissionDenied value)? permissionDenied,
     TResult Function(_Error value)? error,
     required TResult orElse(),
@@ -273,7 +281,9 @@ class _$LoadingImpl with DiagnosticableTreeMixin implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Stream<Position> position) success,
+    required TResult Function(
+            Stream<Position>? position, Position? currentPosition)
+        success,
     required TResult Function() permissionDenied,
     required TResult Function(String message) error,
   }) {
@@ -285,7 +295,8 @@ class _$LoadingImpl with DiagnosticableTreeMixin implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Stream<Position> position)? success,
+    TResult? Function(Stream<Position>? position, Position? currentPosition)?
+        success,
     TResult? Function()? permissionDenied,
     TResult? Function(String message)? error,
   }) {
@@ -297,7 +308,8 @@ class _$LoadingImpl with DiagnosticableTreeMixin implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Stream<Position> position)? success,
+    TResult Function(Stream<Position>? position, Position? currentPosition)?
+        success,
     TResult Function()? permissionDenied,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -313,7 +325,7 @@ class _$LoadingImpl with DiagnosticableTreeMixin implements _Loading {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
+    required TResult Function(ManageGeoSuccessState value) success,
     required TResult Function(_PermissionDenied value) permissionDenied,
     required TResult Function(_Error value) error,
   }) {
@@ -325,7 +337,7 @@ class _$LoadingImpl with DiagnosticableTreeMixin implements _Loading {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
+    TResult? Function(ManageGeoSuccessState value)? success,
     TResult? Function(_PermissionDenied value)? permissionDenied,
     TResult? Function(_Error value)? error,
   }) {
@@ -337,7 +349,7 @@ class _$LoadingImpl with DiagnosticableTreeMixin implements _Loading {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
+    TResult Function(ManageGeoSuccessState value)? success,
     TResult Function(_PermissionDenied value)? permissionDenied,
     TResult Function(_Error value)? error,
     required TResult orElse(),
@@ -354,20 +366,21 @@ abstract class _Loading implements ManageGeoState {
 }
 
 /// @nodoc
-abstract class _$$SuccessImplCopyWith<$Res> {
-  factory _$$SuccessImplCopyWith(
-          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
-      __$$SuccessImplCopyWithImpl<$Res>;
+abstract class _$$ManageGeoSuccessStateImplCopyWith<$Res> {
+  factory _$$ManageGeoSuccessStateImplCopyWith(
+          _$ManageGeoSuccessStateImpl value,
+          $Res Function(_$ManageGeoSuccessStateImpl) then) =
+      __$$ManageGeoSuccessStateImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({Stream<Position> position});
+  $Res call({Stream<Position>? position, Position? currentPosition});
 }
 
 /// @nodoc
-class __$$SuccessImplCopyWithImpl<$Res>
-    extends _$ManageGeoStateCopyWithImpl<$Res, _$SuccessImpl>
-    implements _$$SuccessImplCopyWith<$Res> {
-  __$$SuccessImplCopyWithImpl(
-      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
+class __$$ManageGeoSuccessStateImplCopyWithImpl<$Res>
+    extends _$ManageGeoStateCopyWithImpl<$Res, _$ManageGeoSuccessStateImpl>
+    implements _$$ManageGeoSuccessStateImplCopyWith<$Res> {
+  __$$ManageGeoSuccessStateImplCopyWithImpl(_$ManageGeoSuccessStateImpl _value,
+      $Res Function(_$ManageGeoSuccessStateImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of ManageGeoState
@@ -375,28 +388,37 @@ class __$$SuccessImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? position = null,
+    Object? position = freezed,
+    Object? currentPosition = freezed,
   }) {
-    return _then(_$SuccessImpl(
-      null == position
+    return _then(_$ManageGeoSuccessStateImpl(
+      position: freezed == position
           ? _value.position
           : position // ignore: cast_nullable_to_non_nullable
-              as Stream<Position>,
+              as Stream<Position>?,
+      currentPosition: freezed == currentPosition
+          ? _value.currentPosition
+          : currentPosition // ignore: cast_nullable_to_non_nullable
+              as Position?,
     ));
   }
 }
 
 /// @nodoc
 
-class _$SuccessImpl with DiagnosticableTreeMixin implements _Success {
-  const _$SuccessImpl(this.position);
+class _$ManageGeoSuccessStateImpl
+    with DiagnosticableTreeMixin
+    implements ManageGeoSuccessState {
+  const _$ManageGeoSuccessStateImpl({this.position, this.currentPosition});
 
   @override
-  final Stream<Position> position;
+  final Stream<Position>? position;
+  @override
+  final Position? currentPosition;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ManageGeoState.success(position: $position)';
+    return 'ManageGeoState.success(position: $position, currentPosition: $currentPosition)';
   }
 
   @override
@@ -404,39 +426,45 @@ class _$SuccessImpl with DiagnosticableTreeMixin implements _Success {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'ManageGeoState.success'))
-      ..add(DiagnosticsProperty('position', position));
+      ..add(DiagnosticsProperty('position', position))
+      ..add(DiagnosticsProperty('currentPosition', currentPosition));
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SuccessImpl &&
+            other is _$ManageGeoSuccessStateImpl &&
             (identical(other.position, position) ||
-                other.position == position));
+                other.position == position) &&
+            (identical(other.currentPosition, currentPosition) ||
+                other.currentPosition == currentPosition));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, position);
+  int get hashCode => Object.hash(runtimeType, position, currentPosition);
 
   /// Create a copy of ManageGeoState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
-      __$$SuccessImplCopyWithImpl<_$SuccessImpl>(this, _$identity);
+  _$$ManageGeoSuccessStateImplCopyWith<_$ManageGeoSuccessStateImpl>
+      get copyWith => __$$ManageGeoSuccessStateImplCopyWithImpl<
+          _$ManageGeoSuccessStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Stream<Position> position) success,
+    required TResult Function(
+            Stream<Position>? position, Position? currentPosition)
+        success,
     required TResult Function() permissionDenied,
     required TResult Function(String message) error,
   }) {
-    return success(position);
+    return success(position, currentPosition);
   }
 
   @override
@@ -444,11 +472,12 @@ class _$SuccessImpl with DiagnosticableTreeMixin implements _Success {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Stream<Position> position)? success,
+    TResult? Function(Stream<Position>? position, Position? currentPosition)?
+        success,
     TResult? Function()? permissionDenied,
     TResult? Function(String message)? error,
   }) {
-    return success?.call(position);
+    return success?.call(position, currentPosition);
   }
 
   @override
@@ -456,13 +485,14 @@ class _$SuccessImpl with DiagnosticableTreeMixin implements _Success {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Stream<Position> position)? success,
+    TResult Function(Stream<Position>? position, Position? currentPosition)?
+        success,
     TResult Function()? permissionDenied,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if (success != null) {
-      return success(position);
+      return success(position, currentPosition);
     }
     return orElse();
   }
@@ -472,7 +502,7 @@ class _$SuccessImpl with DiagnosticableTreeMixin implements _Success {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
+    required TResult Function(ManageGeoSuccessState value) success,
     required TResult Function(_PermissionDenied value) permissionDenied,
     required TResult Function(_Error value) error,
   }) {
@@ -484,7 +514,7 @@ class _$SuccessImpl with DiagnosticableTreeMixin implements _Success {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
+    TResult? Function(ManageGeoSuccessState value)? success,
     TResult? Function(_PermissionDenied value)? permissionDenied,
     TResult? Function(_Error value)? error,
   }) {
@@ -496,7 +526,7 @@ class _$SuccessImpl with DiagnosticableTreeMixin implements _Success {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
+    TResult Function(ManageGeoSuccessState value)? success,
     TResult Function(_PermissionDenied value)? permissionDenied,
     TResult Function(_Error value)? error,
     required TResult orElse(),
@@ -508,16 +538,19 @@ class _$SuccessImpl with DiagnosticableTreeMixin implements _Success {
   }
 }
 
-abstract class _Success implements ManageGeoState {
-  const factory _Success(final Stream<Position> position) = _$SuccessImpl;
+abstract class ManageGeoSuccessState implements ManageGeoState {
+  const factory ManageGeoSuccessState(
+      {final Stream<Position>? position,
+      final Position? currentPosition}) = _$ManageGeoSuccessStateImpl;
 
-  Stream<Position> get position;
+  Stream<Position>? get position;
+  Position? get currentPosition;
 
   /// Create a copy of ManageGeoState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ManageGeoSuccessStateImplCopyWith<_$ManageGeoSuccessStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -572,7 +605,9 @@ class _$PermissionDeniedImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Stream<Position> position) success,
+    required TResult Function(
+            Stream<Position>? position, Position? currentPosition)
+        success,
     required TResult Function() permissionDenied,
     required TResult Function(String message) error,
   }) {
@@ -584,7 +619,8 @@ class _$PermissionDeniedImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Stream<Position> position)? success,
+    TResult? Function(Stream<Position>? position, Position? currentPosition)?
+        success,
     TResult? Function()? permissionDenied,
     TResult? Function(String message)? error,
   }) {
@@ -596,7 +632,8 @@ class _$PermissionDeniedImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Stream<Position> position)? success,
+    TResult Function(Stream<Position>? position, Position? currentPosition)?
+        success,
     TResult Function()? permissionDenied,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -612,7 +649,7 @@ class _$PermissionDeniedImpl
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
+    required TResult Function(ManageGeoSuccessState value) success,
     required TResult Function(_PermissionDenied value) permissionDenied,
     required TResult Function(_Error value) error,
   }) {
@@ -624,7 +661,7 @@ class _$PermissionDeniedImpl
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
+    TResult? Function(ManageGeoSuccessState value)? success,
     TResult? Function(_PermissionDenied value)? permissionDenied,
     TResult? Function(_Error value)? error,
   }) {
@@ -636,7 +673,7 @@ class _$PermissionDeniedImpl
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
+    TResult Function(ManageGeoSuccessState value)? success,
     TResult Function(_PermissionDenied value)? permissionDenied,
     TResult Function(_Error value)? error,
     required TResult orElse(),
@@ -730,7 +767,9 @@ class _$ErrorImpl with DiagnosticableTreeMixin implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Stream<Position> position) success,
+    required TResult Function(
+            Stream<Position>? position, Position? currentPosition)
+        success,
     required TResult Function() permissionDenied,
     required TResult Function(String message) error,
   }) {
@@ -742,7 +781,8 @@ class _$ErrorImpl with DiagnosticableTreeMixin implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Stream<Position> position)? success,
+    TResult? Function(Stream<Position>? position, Position? currentPosition)?
+        success,
     TResult? Function()? permissionDenied,
     TResult? Function(String message)? error,
   }) {
@@ -754,7 +794,8 @@ class _$ErrorImpl with DiagnosticableTreeMixin implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Stream<Position> position)? success,
+    TResult Function(Stream<Position>? position, Position? currentPosition)?
+        success,
     TResult Function()? permissionDenied,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -770,7 +811,7 @@ class _$ErrorImpl with DiagnosticableTreeMixin implements _Error {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
+    required TResult Function(ManageGeoSuccessState value) success,
     required TResult Function(_PermissionDenied value) permissionDenied,
     required TResult Function(_Error value) error,
   }) {
@@ -782,7 +823,7 @@ class _$ErrorImpl with DiagnosticableTreeMixin implements _Error {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
+    TResult? Function(ManageGeoSuccessState value)? success,
     TResult? Function(_PermissionDenied value)? permissionDenied,
     TResult? Function(_Error value)? error,
   }) {
@@ -794,7 +835,7 @@ class _$ErrorImpl with DiagnosticableTreeMixin implements _Error {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
+    TResult Function(ManageGeoSuccessState value)? success,
     TResult Function(_PermissionDenied value)? permissionDenied,
     TResult Function(_Error value)? error,
     required TResult orElse(),

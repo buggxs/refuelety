@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: Implement routing
     return BlocProvider<ManageGeoCubit>(
-      create: (BuildContext context) => ManageGeoCubit(),
+      create: (BuildContext context) => ManageGeoCubit()..getCurrentPosition(),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(

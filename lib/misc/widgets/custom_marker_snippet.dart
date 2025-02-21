@@ -12,8 +12,8 @@ class CustomMarkerGenerator {
     final Canvas canvas = Canvas(recorder);
 
     // Größere Dimensionen für den Tooltip
-    const double width = 350;
-    const double height = 250;
+    const double width = 250;
+    const double height = 150;
 
     // Zeichne den Tooltip-Hintergrund
     final Paint paint = Paint()
@@ -64,7 +64,7 @@ class CustomMarkerGenerator {
         text: station.brand ?? 'Unbekannt',
         style: const TextStyle(
           color: Colors.black87,
-          fontSize: 48,
+          fontSize: 24,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -87,7 +87,7 @@ class CustomMarkerGenerator {
               text: 'Diesel\n',
               style: TextStyle(
                 color: Colors.black54,
-                fontSize: 28,
+                fontSize: 22,
                 height: 1.2,
               ),
             ),
@@ -95,7 +95,7 @@ class CustomMarkerGenerator {
               text: '${station.diesel?.toStringAsFixed(2)} €',
               style: const TextStyle(
                 color: Colors.black,
-                fontSize: 42,
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
                 height: 1.2,
               ),
@@ -111,7 +111,7 @@ class CustomMarkerGenerator {
         )
         ..paint(
           canvas,
-          const Offset(20, 75),
+          const Offset(20, 40),
         );
     }
 
@@ -121,7 +121,7 @@ class CustomMarkerGenerator {
         text: station.isOpen == true ? 'Geöffnet' : 'Geschlossen',
         style: TextStyle(
           color: station.isOpen == true ? Colors.green : Colors.red,
-          fontSize: 32,
+          fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -131,7 +131,7 @@ class CustomMarkerGenerator {
       canvas,
       Offset(
         (width - statusText.width) / 2,
-        height - 70,
+        height - 30,
       ),
     );
 

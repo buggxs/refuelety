@@ -11,6 +11,21 @@ part 'manage_geo_state.dart';
 class ManageGeoCubit extends Cubit<ManageGeoState> {
   ManageGeoCubit() : super(const ManageGeoState.initial());
 
+  Future<void> getCurrentPosition() async {
+    final bool hasPermission = await app<GeoService>().checkPermission();
+    if (!hasPermission) {
+      emit(const ManageGeoState.permissionDenied());
+      return;
+    }
+    emit(const ManageGeoState.loading());
+    try {
+      final Position position = await app<GeoService>().getPosition();
+      emit(ManageGeoState.success(currentPosition: position));
+    } on Exception catch (e) {
+      emit(ManageGeoState.error(e.toString()));
+    }
+  }
+
   Future<void> fetchPositionStream() async {
     final bool hasPermission = await app<GeoService>().checkPermission();
     if (!hasPermission) {
@@ -21,7 +36,7 @@ class ManageGeoCubit extends Cubit<ManageGeoState> {
     try {
       final Stream<Position> positionStream =
           app<GeoService>().getPositionStream();
-      emit(ManageGeoState.success(positionStream));
+      emit(ManageGeoState.success(position: positionStream));
     } on Exception catch (e) {
       emit(ManageGeoState.error(e.toString()));
     }

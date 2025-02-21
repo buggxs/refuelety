@@ -1,11 +1,13 @@
 // File: lib/screens/map_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:refuelety/api/api.dart';
 import 'package:refuelety/components/fuel_station/widgets/animated_station_info_window.dart';
 import 'package:refuelety/components/map_view/cubit/map_cubit.dart';
 import 'package:refuelety/core/app_service_locator.dart';
+import 'package:refuelety/features/geo/cubit/manage_geo_cubit.dart';
 
 class MapScreen extends StatelessWidget {
   const MapScreen({super.key});
@@ -28,18 +30,42 @@ class MapView extends StatefulWidget {
 
 class _MapViewState extends State<MapView> {
   late GoogleMapController _mapController;
-  static const LatLng _defaultLocation = LatLng(51.25, 9.77);
+  LatLng userLocation = const LatLng(51.25, 9.77);
 
-  void _onMapCreated(GoogleMapController controller) {
+  void _onMapCreated(
+    GoogleMapController controller,
+    LatLng currentUserLocation,
+  ) {
     _mapController = controller;
     context.read<MapCubit>().loadFuelStations(
-          location: _defaultLocation,
+          location: currentUserLocation,
         );
   }
 
   @override
   Widget build(BuildContext context) {
-    final MapCubit cubit = context.read<MapCubit>();
+    final ManageGeoCubit geoCubit = context.read<ManageGeoCubit>();
+    final MapCubit cubit = context.watch<MapCubit>();
+
+    geoCubit.state.when(
+      initial: () => null,
+      loading: () => null,
+      success: (_, Position? currentPosition) {
+        if (currentPosition?.latitude == null ||
+            currentPosition?.longitude == null) {
+          return;
+        }
+        setState(() {
+          userLocation = LatLng(
+            currentPosition!.latitude,
+            currentPosition.longitude,
+          );
+        });
+      },
+      permissionDenied: () => null,
+      error: (String error) => null,
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tankstellen Map'),
@@ -56,9 +82,12 @@ class _MapViewState extends State<MapView> {
       body: Stack(
         children: <Widget>[
           GoogleMap(
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: const CameraPosition(
-              target: _defaultLocation,
+            onMapCreated: (GoogleMapController controller) => _onMapCreated(
+              controller,
+              userLocation,
+            ),
+            initialCameraPosition: CameraPosition(
+              target: userLocation,
               zoom: 15,
             ),
             markers: cubit.state.markers,

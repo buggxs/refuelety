@@ -5,6 +5,6 @@ part 'env.g.dart';
 
 @Envied(path: '.env')
 abstract class Env {
-  @EnviedField(varName: 'TANKERKEONIG_API_KEY', obfuscate: true)
-  static String tankerKoenigApiKey = _Env.tankerKoenigApiKey;
+  @EnviedField(varName: 'tankerKoenigApiKey', obfuscate: true)
+  static String? tankerKoenigApiKey = _Env.tankerKoenigApiKey;
 }
