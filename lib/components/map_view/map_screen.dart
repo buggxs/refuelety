@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:refuelety/api/api.dart';
 import 'package:refuelety/components/fuel_station/widgets/animated_station_info_window.dart';
@@ -73,9 +74,8 @@ class _MapViewState extends State<MapView> {
         actions: <IconButton>[
           IconButton(
             icon: const Icon(Icons.list_alt),
-            onPressed: () {
-              // TODO: implement switch to list view
-            },
+            onPressed: () => GoRouter.of(context).goNamed('stations'),
+            tooltip: 'Zur Listenansicht wechseln',
           ),
         ],
       ),
