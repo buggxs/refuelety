@@ -1,65 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:refuelety/api/api.dart';
+import 'package:refuelety/components/fuel_station/cubit/fuel_station_cubit.dart';
 import 'package:refuelety/components/fuel_station/widgets/fuel_station_card.dart';
-import 'package:refuelety/core/app_service_locator.dart';
+import 'package:refuelety/features/geo/cubit/manage_geo_cubit.dart';
 
-class FuelStationListScreen extends StatefulWidget {
+class FuelStationListScreen extends StatelessWidget {
   const FuelStationListScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _FuelStationListScreenState createState() => _FuelStationListScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider<FuelStationCubit>(
+      create: (BuildContext context) => FuelStationCubit(
+        geoCubit: context.read<ManageGeoCubit>(),
+      ),
+      child: const FuelStationListScreenContent(),
+    );
+  }
 }
 
-class _FuelStationListScreenState extends State<FuelStationListScreen> {
-  late Future<FuelStationPage<FuelStation>> _fuelStationsFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _fuelStationsFuture = fetchFuelStations();
-  }
-
-  Future<FuelStationPage<FuelStation>> fetchFuelStations() async {
-    // TODO: use location of phone
-    return app<FuelService>().getFuelStationInRadius(lat: 51.25, lng: 9.77);
-  }
+class FuelStationListScreenContent extends StatelessWidget {
+  const FuelStationListScreenContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement cubit
+    final FuelStationCubit cubit = context.watch<FuelStationCubit>();
+
+    Widget child = const SizedBox();
+
+    if (cubit.state is FuelStationInitial) {
+      child = const Center(child: CircularProgressIndicator());
+    }
+
+    if (cubit.state is FuelStationLoading) {
+      child = const Center(child: CircularProgressIndicator());
+    }
+
+    if (cubit.state case final FuelStationLoaded loadedState) {
+      if (loadedState.fuelStations.stations?.isEmpty ?? true) {
+        child = const Center(child: Text('Keine Tankstellen gefunden'));
+      } else {
+        child = ListView.builder(
+          itemCount: loadedState.fuelStations.stations!.length,
+          itemBuilder: (_, int index) {
+            final FuelStation station =
+                loadedState.fuelStations.stations![index];
+            return FuelStationCard(station: station);
+          },
+        );
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tankstellen Übersicht'),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: () {
-              // Filter-Action implementieren
-            },
+            icon: const Icon(Icons.map),
+            onPressed: () => GoRouter.of(context).goNamed('map'),
+            tooltip: 'Zur Kartenansicht wechseln',
           ),
         ],
       ),
-      body: FutureBuilder<FuelStationPage<FuelStation>>(
-        future: _fuelStationsFuture,
-        builder: (_, AsyncSnapshot<FuelStationPage<FuelStation>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return const Center(child: Text('Fehler beim Laden der Daten'));
-          } else if (!snapshot.hasData || snapshot.data!.stations!.isEmpty) {
-            return const Center(child: Text('Keine Tankstellen gefunden'));
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.stations!.length,
-              itemBuilder: (_, int index) {
-                final FuelStation station = snapshot.data!.stations![index];
-                return FuelStationCard(station: station);
-              },
-            );
-          }
-        },
-      ),
+      body: child,
     );
   }
 }

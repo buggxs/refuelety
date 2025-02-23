@@ -14,13 +14,18 @@ class OnlineGeoService implements GeoService {
     final bool isServiceEnabled = await Geolocator.isLocationServiceEnabled();
 
     if (!isServiceEnabled) {
-      permission = await Geolocator.requestPermission();
-    } else if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
+      //TODO: Ask to enable location services
+      return false;
+    }
+    permission = await Geolocator.requestPermission();
+
+    if (permission == LocationPermission.denied) {
+      return false;
     }
     if (permission == LocationPermission.deniedForever) {
       return false;
     }
+
     return true;
   }
 

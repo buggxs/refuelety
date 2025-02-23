@@ -33,6 +33,7 @@ class OnlineFuelService with LoggerMixin implements FuelService {
     String sort = 'dist',
   }) {
     assert(radius <= 25.0);
+    final String? apiKey = Env.tankerKoenigApiKey;
     final Map<String, dynamic> queryParams = <String, dynamic>{
       'lat': lat.toString(),
       'lng': lng.toString(),
@@ -40,7 +41,7 @@ class OnlineFuelService with LoggerMixin implements FuelService {
       'sort': sort,
       'type': type.name,
       // TODO: store the apikey somehow secure
-      'apikey': Env.tankerKoenigApiKey,
+      'apikey': apiKey,
     };
     final Uri url = Uri.https(
       'creativecommons.tankerkoenig.de',
