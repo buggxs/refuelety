@@ -96,8 +96,6 @@ class MapView extends StatelessWidget {
                       ),
                     ),
                   ),
-                // Wir zeigen das AnimatedStationInfoWindow immer an,
-                // kontrollieren aber die Sichtbarkeit über die isVisible-Property
                 if (cubit.state.selectedStation != null)
                   AnimatedStationInfoWindow(
                     station: cubit.state.selectedStation!,
