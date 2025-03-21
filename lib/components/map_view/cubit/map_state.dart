@@ -8,6 +8,7 @@ class MapState {
     this.error,
     this.selectedStation,
     this.selectedLocation,
+    this.userPosition,
   });
 
   final bool isLoading;
@@ -16,6 +17,7 @@ class MapState {
   final String? error;
   final FuelStation? selectedStation;
   final LatLng? selectedLocation;
+  final LatLng? userPosition;
 
   MapState copyWith({
     bool? isLoading,
@@ -24,14 +26,16 @@ class MapState {
     String? error,
     FuelStation? selectedStation,
     LatLng? selectedLocation,
+    LatLng? userPosition,
   }) {
     return MapState(
       isLoading: isLoading ?? this.isLoading,
       markers: markers ?? this.markers,
       stations: stations ?? this.stations,
-      error: error,
-      selectedStation: selectedStation,
-      selectedLocation: selectedLocation,
+      error: error ?? this.error,
+      selectedStation: selectedStation ?? this.selectedStation,
+      selectedLocation: selectedLocation ?? this.selectedLocation,
+      userPosition: userPosition ?? this.userPosition,
     );
   }
 
@@ -47,7 +51,8 @@ class MapState {
         other.stations == stations &&
         other.error == error &&
         other.selectedStation == selectedStation &&
-        other.selectedLocation == selectedLocation;
+        other.selectedLocation == selectedLocation &&
+        userPosition == userPosition;
   }
 
   @override
@@ -57,6 +62,7 @@ class MapState {
         stations.hashCode ^
         error.hashCode ^
         selectedStation.hashCode ^
-        selectedLocation.hashCode;
+        selectedLocation.hashCode ^
+        userPosition.hashCode;
   }
 }
