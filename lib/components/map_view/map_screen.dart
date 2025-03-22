@@ -1,12 +1,14 @@
 // File: lib/screens/map_screen.dart
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:refuelety/api/api.dart';
-import 'package:refuelety/components/fuel_station/widgets/animated_station_info_window.dart';
 import 'package:refuelety/components/map_view/cubit/map_cubit.dart';
+import 'package:refuelety/components/map_view/widgets/fuel_price_card.dart';
 import 'package:refuelety/core/app_service_locator.dart';
 import 'package:refuelety/features/geo/cubit/manage_geo_cubit.dart';
 
@@ -30,42 +32,29 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
-  late GoogleMapController _mapController;
-  LatLng userLocation = const LatLng(51.25, 9.77);
+  final Completer<GoogleMapController> _mapController =
+      Completer<GoogleMapController>();
 
-  void _onMapCreated(
+  Future<void> _onMapCreated(
     GoogleMapController controller,
     LatLng currentUserLocation,
-  ) {
-    _mapController = controller;
+  ) async {
+    _mapController.complete(controller);
+
     context.read<MapCubit>().loadFuelStations(
           location: currentUserLocation,
         );
+  }
+
+  Future<void> _moveCamera(LatLng position) async {
+    final GoogleMapController controller = await _mapController.future;
+    controller.animateCamera(CameraUpdate.newLatLng(position));
   }
 
   @override
   Widget build(BuildContext context) {
     final ManageGeoCubit geoCubit = context.read<ManageGeoCubit>();
     final MapCubit cubit = context.watch<MapCubit>();
-
-    geoCubit.state.when(
-      initial: () => null,
-      loading: () => null,
-      success: (_, Position? currentPosition) {
-        if (currentPosition?.latitude == null ||
-            currentPosition?.longitude == null) {
-          return;
-        }
-        setState(() {
-          userLocation = LatLng(
-            currentPosition!.latitude,
-            currentPosition.longitude,
-          );
-        });
-      },
-      permissionDenied: () => null,
-      error: (String error) => null,
-    );
 
     return Scaffold(
       appBar: AppBar(
@@ -81,20 +70,112 @@ class _MapViewState extends State<MapView> {
       ),
       body: Stack(
         children: <Widget>[
-          GoogleMap(
-            onMapCreated: (GoogleMapController controller) => _onMapCreated(
-              controller,
-              userLocation,
+          geoCubit.state.when(
+            initial: () => const SizedBox.shrink(),
+            loading: () => const Center(
+              child: CircularProgressIndicator(),
             ),
-            initialCameraPosition: CameraPosition(
-              target: userLocation,
-              zoom: 15,
+            success: (Stream<Position>? positionStream, _) {
+              return StreamBuilder<Position>(
+                stream: positionStream,
+                builder:
+                    (BuildContext context, AsyncSnapshot<Position> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return const Center(
+                      child: Text('Fehler beim Laden der Position'),
+                    );
+                  }
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: Text('Keine Position verfügbar'),
+                    );
+                  }
+                  final LatLng userPosition = LatLng(
+                    snapshot.data!.latitude,
+                    snapshot.data!.longitude,
+                  );
+                  // Move camera to the new position
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _moveCamera(userPosition);
+                  });
+
+                  return GoogleMap(
+                    onMapCreated: (GoogleMapController controller) =>
+                        _onMapCreated(
+                      controller,
+                      userPosition,
+                    ),
+                    initialCameraPosition: CameraPosition(
+                      target: userPosition,
+                      zoom: 15,
+                    ),
+
+                    markers: cubit.state.markers,
+                    myLocationEnabled: true,
+                    myLocationButtonEnabled: true,
+
+                    // onTap: (_) => cubit.selectStation(null),
+                    // onTap: (_) {
+                    //   final FuelStation? selectedStation =
+                    //       cubit.state.selectedStation;
+                    //   showBottomSheet2(
+                    //     context,
+                    //     selectedStation!,
+                    //   );
+                    // },
+                  );
+                },
+              );
+            },
+            permissionDenied: () => const Center(
+              child: Text('Keine Berechtigung für Standortzugriff'),
             ),
-            markers: cubit.state.markers,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: true,
-            onTap: (_) => cubit.selectStation(null),
+            error: (String error) => Center(
+              child: Text('Fehler beim Standortzugriff: $error'),
+            ),
           ),
+
+          Positioned(
+            right: 10,
+            top: 50,
+            child: IconButton.filled(
+              onPressed: () {
+                final FuelStation fuelStation = FuelStation(
+                  id: '1',
+                  name: 'Shell Tankstelle',
+                  place: 'Musterstadt',
+                  dist: 1.5,
+                  e5: 1.73,
+                  e10: 1.71,
+                  diesel: 1.55,
+                  isOpen: true,
+                  brand: 'Shell',
+                  street: 'Musterstraße ',
+                  houseNumber: '1',
+                  postCode: 55345,
+                  lat: 48.123456,
+                  lng: 11.123456,
+                );
+                showBottomSheet2(
+                  context,
+                  fuelStation,
+                );
+              },
+              icon: const Icon(Icons.search),
+            ),
+          ),
+          Positioned(
+            right: 10,
+            top: 100,
+            child: IconButton.filled(
+              onPressed: () => context.goNamed('filter'),
+              icon: const Icon(Icons.tune),
+            ),
+          ),
+
           if (cubit.state.isLoading)
             const Center(
               child: CircularProgressIndicator(),
@@ -116,27 +197,158 @@ class _MapViewState extends State<MapView> {
             ),
           // Wir zeigen das AnimatedStationInfoWindow immer an,
           // kontrollieren aber die Sichtbarkeit über die isVisible-Property
-          if (cubit.state.selectedStation != null)
-            AnimatedStationInfoWindow(
-              station: cubit.state.selectedStation!,
-              isVisible: cubit.state.selectedStation != null,
-              onClose: () => context.read<MapCubit>().selectStation(null),
-            ),
+          // s
+          // AnimatedStationInfoWindow(
+          //   station: cubit.state.selectedStation!,
+          //   isVisible: cubit.state.selectedStation != null,
+          //   onClose: () => context.read<MapCubit>().selectStation(null),
+          // ),
         ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _mapController.getVisibleRegion().then((LatLngBounds bounds) {
-            final LatLng center = LatLng(
-              (bounds.northeast.latitude + bounds.southwest.latitude) / 2,
-              (bounds.northeast.longitude + bounds.southwest.longitude) / 2,
-            );
-            cubit.loadFuelStations(location: center);
-          });
-        },
-        child: const Icon(Icons.refresh),
       ),
     );
   }
+}
+
+void showBottomSheet2(
+  BuildContext context,
+  FuelStation station,
+) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return SizedBox(
+        height: MediaQuery.sizeOf(context).height * 0.4,
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            children: <Widget>[
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Image.network(
+                    width: 70,
+                    fit: BoxFit.cover,
+                    'https://www.designenlassen.de/blog/wp-content/uploads/2024/03/Shell.png',
+                  ),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        '${station.name}',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge!
+                            .copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        '${station.place}',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Colors.green,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    '${station.dist} km',
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Colors.green,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(
+                    width: 30,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: <Widget>[
+                  FuelPriceCard(
+                    fuelType: 'Benzin',
+                    price: station.e5 ?? 0,
+                    isIncrease: true,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  FuelPriceCard(
+                    fuelType: 'Super E10',
+                    price: station.e10 ?? 0,
+                    isIncrease: false,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  FuelPriceCard(
+                    fuelType: 'Diesel',
+                    price: station.diesel ?? 0,
+                    isIncrease: true,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Row(
+                children: <Widget>[
+                  const Icon(
+                    size: 40,
+                    Icons.location_on_outlined,
+                  ),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        '${station.street} ${station.houseNumber}',
+                        style:
+                            Theme.of(context).textTheme.titleMedium!.copyWith(),
+                      ),
+                      Text(
+                        '${station.postCode} ${station.place}',
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  IconButton.filled(
+                    onPressed: () {},
+                    icon: const Icon(Icons.star_outline),
+                  ),
+                  IconButton.filled(
+                    onPressed: () {},
+                    icon: const Icon(Icons.directions),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }

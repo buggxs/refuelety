@@ -23,6 +23,7 @@ class MapCubit extends Cubit<MapState> {
   Future<void> loadFuelStations({
     required LatLng location,
     double radius = 5.0,
+   
   }) async {
     emit(state.copyWith(isLoading: true, error: null));
 
@@ -86,4 +87,6 @@ class MapCubit extends Cubit<MapState> {
       );
     }
   }
+
+  
 }

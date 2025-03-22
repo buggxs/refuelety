@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:refuelety/components/fuel_station/fuel_station_list_screen.dart';
+import 'package:refuelety/components/map_view/map_filter_screen.dart';
 import 'package:refuelety/components/map_view/map_screen.dart';
 
 final GoRouter router = GoRouter(
@@ -10,6 +11,14 @@ final GoRouter router = GoRouter(
       path: '/map',
       name: 'map',
       builder: (BuildContext context, GoRouterState state) => const MapScreen(),
+      routes: <RouteBase>[
+        GoRoute(
+          path: '/filter',
+          name: 'filter',
+          builder: (BuildContext context, GoRouterState state) =>
+              const MapFilterScreen(),
+        ),
+      ],
     ),
     GoRoute(
       path: '/stations',

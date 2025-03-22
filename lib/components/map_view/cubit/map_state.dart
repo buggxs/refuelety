@@ -5,6 +5,7 @@ class MapState {
     this.isLoading = false,
     this.markers = const <Marker>{},
     this.stations = const <FuelStation>[],
+    
     this.error,
     this.selectedStation,
     this.selectedLocation,
@@ -13,6 +14,7 @@ class MapState {
   final bool isLoading;
   final Set<Marker> markers;
   final List<FuelStation> stations;
+  
   final String? error;
   final FuelStation? selectedStation;
   final LatLng? selectedLocation;
@@ -21,6 +23,7 @@ class MapState {
     bool? isLoading,
     Set<Marker>? markers,
     List<FuelStation>? stations,
+   
     String? error,
     FuelStation? selectedStation,
     LatLng? selectedLocation,
@@ -29,6 +32,7 @@ class MapState {
       isLoading: isLoading ?? this.isLoading,
       markers: markers ?? this.markers,
       stations: stations ?? this.stations,
+     
       error: error,
       selectedStation: selectedStation,
       selectedLocation: selectedLocation,
