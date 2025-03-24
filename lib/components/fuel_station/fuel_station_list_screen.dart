@@ -1,9 +1,11 @@
+// Datei: components/fuel_station/fuel_station_list_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:refuelety/api/api.dart';
 import 'package:refuelety/components/fuel_station/cubit/fuel_station_cubit.dart';
 import 'package:refuelety/components/fuel_station/widgets/fuel_station_card.dart';
+import 'package:refuelety/components/fuel_station/widgets/fuel_station_filter.dart';
 import 'package:refuelety/features/geo/cubit/manage_geo_cubit.dart';
 
 class FuelStationListScreen extends StatelessWidget {
@@ -15,37 +17,71 @@ class FuelStationListScreen extends StatelessWidget {
       create: (BuildContext context) => FuelStationCubit(
         geoCubit: context.read<ManageGeoCubit>(),
       ),
-      child: const FuelStationListScreenContent(),
+      child: FuelStationListScreenContent(),
     );
   }
 }
 
 class FuelStationListScreenContent extends StatelessWidget {
-  const FuelStationListScreenContent({super.key});
+  FuelStationListScreenContent({super.key});
+
+  final Set<FuelType> selectedFuelTypes = <FuelType>{
+    FuelType.all,
+  }; // Standardfilter
 
   @override
   Widget build(BuildContext context) {
     final FuelStationCubit cubit = context.watch<FuelStationCubit>();
 
-    Widget child = const SizedBox();
+    Widget content = const SizedBox();
 
     if (cubit.state is FuelStationInitial) {
-      child = const Center(child: CircularProgressIndicator());
+      content = const Center(child: CircularProgressIndicator());
     }
 
     if (cubit.state is FuelStationLoading) {
-      child = const Center(child: CircularProgressIndicator());
+      content = const Center(child: CircularProgressIndicator());
     }
 
     if (cubit.state case final FuelStationLoaded loadedState) {
-      if (loadedState.fuelStations.stations?.isEmpty ?? true) {
-        child = const Center(child: Text('Keine Tankstellen gefunden'));
+      final List<FuelStation> filteredStations = cubit.filterStations(
+        loadedState.fuelStations.stations ?? <FuelStation>[],
+      );
+
+      if (filteredStations.isEmpty) {
+        content = Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Icon(
+                Icons.local_gas_station_outlined,
+                size: 64,
+                color: Colors.grey[400],
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Keine Tankstellen gefunden',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Colors.grey[600],
+                    ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Versuche den Suchradius zu vergrößern\noder andere Filter zu wählen',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.grey[500],
+                    ),
+              ),
+            ],
+          ),
+        );
       } else {
-        child = ListView.builder(
-          itemCount: loadedState.fuelStations.stations!.length,
+        content = ListView.builder(
+          padding: const EdgeInsets.only(top: 8, bottom: 16),
+          itemCount: filteredStations.length,
           itemBuilder: (_, int index) {
-            final FuelStation station =
-                loadedState.fuelStations.stations![index];
+            final FuelStation station = filteredStations[index];
             return FuelStationCard(station: station);
           },
         );
@@ -63,7 +99,20 @@ class FuelStationListScreenContent extends StatelessWidget {
           ),
         ],
       ),
-      body: child,
+      body: Column(
+        children: <Widget>[
+          // Filter-Widget
+          FuelStationFilter(
+            radius: cubit.state.searchRadius,
+            onRadiusChanged: cubit.onRadiusChanged,
+            selectedFuelTypes: cubit.state.selectedFuelTypes,
+            onFuelTypeSelected: cubit.onFuelTypeSelected,
+          ),
+
+          // Liste der Tankstellen
+          Expanded(child: content),
+        ],
+      ),
     );
   }
 }
