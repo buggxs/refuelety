@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:refuelety/core/app_service_locator.dart';
 import 'package:refuelety/core/router.dart';
 import 'package:refuelety/features/geo/cubit/manage_geo_cubit.dart';
+import 'package:refuelety/misc/app_theme.dart';
 
 void main() {
   setup();
@@ -19,10 +20,8 @@ class MyApp extends StatelessWidget {
       create: (BuildContext context) => ManageGeoCubit()..getCurrentPosition(),
       child: MaterialApp.router(
         title: 'Flutter Demo',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorSchemeSeed: Colors.green[700],
-        ),
+        theme: AppTheme().light(),
+        darkTheme: AppTheme().dark(),
         routerConfig: router,
       ),
     );
