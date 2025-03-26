@@ -39,11 +39,9 @@ class FuelStationListScreenContent extends StatelessWidget {
     }
 
     if (cubit.state case final FuelStationLoaded loadedState) {
-      final List<FuelStation> filteredStations = cubit.filterStations(
-        loadedState.selectedFuelType,
-      );
-
-      if (filteredStations.isEmpty) {
+      final List<FuelStation>? filteredStations =
+          loadedState.fuelStations.stations;
+      if (loadedState.fuelStations.stations?.isEmpty ?? true) {
         content = Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -75,7 +73,7 @@ class FuelStationListScreenContent extends StatelessWidget {
       } else {
         content = ListView.builder(
           padding: const EdgeInsets.only(top: 8, bottom: 16),
-          itemCount: filteredStations.length,
+          itemCount: filteredStations!.length,
           itemBuilder: (_, int index) {
             final FuelStation station = filteredStations[index];
             return FuelStationCard(station: station);

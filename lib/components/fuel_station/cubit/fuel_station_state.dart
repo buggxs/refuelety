@@ -4,12 +4,12 @@ part of 'fuel_station_cubit.dart';
 abstract class FuelStationState implements Equatable {
   FuelStationState({
     this.userLocation,
-    this.selectedFuelType = FuelType.diesel,
+    this.selectedFuelType,
     this.searchRadius = 5,
   });
 
   final LatLng? userLocation;
-  final FuelType selectedFuelType;
+  final FuelType? selectedFuelType;
   final double searchRadius;
 
   FuelStationState copyWith({
@@ -51,7 +51,7 @@ class FuelStationLoading extends FuelStationState {
 
   FuelStationLoaded toFuelStationLoaded({
     required FuelStationPage<FuelStation> fuelStations,
-    FuelType? selectedFuelTypes,
+    FuelType? selectedFuelType,
     LatLng? userLocation,
   }) {
     return FuelStationLoaded(

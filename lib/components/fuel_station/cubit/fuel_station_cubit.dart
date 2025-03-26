@@ -91,7 +91,7 @@ class FuelStationCubit extends Cubit<FuelStationState> with LoggerMixin {
 
         emit(
           loadingState.toFuelStationLoaded(
-            selectedFuelTypes: type,
+            selectedFuelType: type,
             fuelStations: fuelStations,
             userLocation: LatLng(lat, lng),
           ),
@@ -108,18 +108,13 @@ class FuelStationCubit extends Cubit<FuelStationState> with LoggerMixin {
     }
   }
 
-  List<FuelStation> filterStations(FuelType type) {
+  List<FuelStation> filterStations(FuelType? type) {
     if (state case final FuelStationLoaded loadedState) {
       final List<FuelStation> filteredStations = List<FuelStation>.of(
         loadedState.fuelStations.stations ?? <FuelStation>[],
       );
 
-      final List<FuelStation> stations = List<FuelStation>.of(
-        loadedState.fuelStations.stations ?? <FuelStation>[],
-      );
-
-      // Nach dem ausgewählten Kraftstofftyp sortieren
-      stations.sort((FuelStation a, FuelStation b) {
+      filteredStations.sort((FuelStation a, FuelStation b) {
         double? priceA;
         double? priceB;
 
@@ -136,9 +131,10 @@ class FuelStationCubit extends Cubit<FuelStationState> with LoggerMixin {
             priceA = a.e10;
             priceB = b.e10;
             break;
-          case FuelType.all:
-            priceA = a.diesel ?? a.e5 ?? a.e10;
-            priceB = b.diesel ?? b.e5 ?? b.e10;
+          default:
+            // Use distance if null
+            priceA = a.dist;
+            priceB = b.dist;
             break;
         }
 
@@ -153,7 +149,6 @@ class FuelStationCubit extends Cubit<FuelStationState> with LoggerMixin {
           return -1;
         }
 
-        // Sonst sortiere aufsteigend nach dem Preis (günstigste zuerst)
         return priceA.compareTo(priceB);
       });
 
@@ -172,7 +167,7 @@ class FuelStationCubit extends Cubit<FuelStationState> with LoggerMixin {
     }
   }
 
-  void onFuelTypeSelected(FuelType type) {
+  void onFuelTypeSelected(FuelType? type) {
     if (state case final FuelStationLoaded loadedState) {
       final List<FuelStation> stations = filterStations(type);
 

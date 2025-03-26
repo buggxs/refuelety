@@ -13,8 +13,8 @@ class FuelStationFilter extends StatefulWidget {
 
   final double radius;
   final ValueChanged<double> onRadiusChanged;
-  final FuelType selectedFuelType;
-  final Function(FuelType) onFuelTypeSelected;
+  final FuelType? selectedFuelType;
+  final Function(FuelType?) onFuelTypeSelected;
 
   @override
   State<FuelStationFilter> createState() => _FuelStationFilterState();
@@ -22,7 +22,7 @@ class FuelStationFilter extends StatefulWidget {
 
 class _FuelStationFilterState extends State<FuelStationFilter> {
   late double _currentRadius;
-  late FuelType _selectedFuelType;
+  late FuelType? _selectedFuelType;
   bool _isExpanded = false;
 
   @override
@@ -205,11 +205,11 @@ class _FuelStationFilterState extends State<FuelStationFilter> {
         setState(() {
           if (selected) {
             _selectedFuelType = type;
+          } else {
+            _selectedFuelType = null;
           }
         });
-        if (selected) {
-          widget.onFuelTypeSelected(type);
-        }
+        widget.onFuelTypeSelected(_selectedFuelType);
       },
     );
   }
