@@ -1,4 +1,3 @@
-// Datei: components/fuel_station/fuel_station_list_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -17,17 +16,13 @@ class FuelStationListScreen extends StatelessWidget {
       create: (BuildContext context) => FuelStationCubit(
         geoCubit: context.read<ManageGeoCubit>(),
       ),
-      child: FuelStationListScreenContent(),
+      child: const FuelStationListScreenContent(),
     );
   }
 }
 
 class FuelStationListScreenContent extends StatelessWidget {
-  FuelStationListScreenContent({super.key});
-
-  final Set<FuelType> selectedFuelTypes = <FuelType>{
-    FuelType.all,
-  }; // Standardfilter
+  const FuelStationListScreenContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +40,7 @@ class FuelStationListScreenContent extends StatelessWidget {
 
     if (cubit.state case final FuelStationLoaded loadedState) {
       final List<FuelStation> filteredStations = cubit.filterStations(
-        loadedState.fuelStations.stations ?? <FuelStation>[],
+        loadedState.selectedFuelType,
       );
 
       if (filteredStations.isEmpty) {
@@ -67,7 +62,8 @@ class FuelStationListScreenContent extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Versuche den Suchradius zu vergrößern\noder andere Filter zu wählen',
+                'Versuche den Suchradius zu vergrößern\noder '
+                'andere Filter zu wählen',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.grey[500],
@@ -105,7 +101,7 @@ class FuelStationListScreenContent extends StatelessWidget {
           FuelStationFilter(
             radius: cubit.state.searchRadius,
             onRadiusChanged: cubit.onRadiusChanged,
-            selectedFuelTypes: cubit.state.selectedFuelTypes,
+            selectedFuelType: cubit.state.selectedFuelType,
             onFuelTypeSelected: cubit.onFuelTypeSelected,
           ),
 

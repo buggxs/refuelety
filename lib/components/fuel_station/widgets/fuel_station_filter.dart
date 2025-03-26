@@ -7,14 +7,14 @@ class FuelStationFilter extends StatefulWidget {
     super.key,
     required this.radius,
     required this.onRadiusChanged,
-    required this.selectedFuelTypes,
+    required this.selectedFuelType,
     required this.onFuelTypeSelected,
   });
 
   final double radius;
   final ValueChanged<double> onRadiusChanged;
-  final Set<FuelType> selectedFuelTypes;
-  final Function(FuelType, bool) onFuelTypeSelected;
+  final FuelType selectedFuelType;
+  final Function(FuelType) onFuelTypeSelected;
 
   @override
   State<FuelStationFilter> createState() => _FuelStationFilterState();
@@ -22,14 +22,14 @@ class FuelStationFilter extends StatefulWidget {
 
 class _FuelStationFilterState extends State<FuelStationFilter> {
   late double _currentRadius;
-  late Set<FuelType> _selectedFuelTypes;
+  late FuelType _selectedFuelType;
   bool _isExpanded = false;
 
   @override
   void initState() {
     super.initState();
     _currentRadius = widget.radius;
-    _selectedFuelTypes = Set<FuelType>.from(widget.selectedFuelTypes);
+    _selectedFuelType = widget.selectedFuelType;
   }
 
   @override
@@ -144,7 +144,7 @@ class _FuelStationFilterState extends State<FuelStationFilter> {
 
                   // Kraftstoff-Typ Filter
                   Text(
-                    'Kraftstofftypen:',
+                    'Nach günstigsten Preis sortieren:',
                     style: theme.textTheme.bodyMedium,
                   ),
                   const SizedBox(height: 8),
@@ -167,11 +167,6 @@ class _FuelStationFilterState extends State<FuelStationFilter> {
                         'Benzin (E10)',
                         Icons.eco,
                       ),
-                      _buildFuelTypeChip(
-                        FuelType.all,
-                        'Alle',
-                        Icons.select_all,
-                      ),
                     ],
                   ),
                 ],
@@ -184,7 +179,7 @@ class _FuelStationFilterState extends State<FuelStationFilter> {
   }
 
   Widget _buildFuelTypeChip(FuelType type, String label, IconData icon) {
-    final bool isSelected = _selectedFuelTypes.contains(type);
+    final bool isSelected = _selectedFuelType == type;
     final ThemeData theme = Theme.of(context);
 
     return FilterChip(
@@ -209,12 +204,12 @@ class _FuelStationFilterState extends State<FuelStationFilter> {
       onSelected: (bool selected) {
         setState(() {
           if (selected) {
-            _selectedFuelTypes.add(type);
-          } else {
-            _selectedFuelTypes.remove(type);
+            _selectedFuelType = type;
           }
         });
-        widget.onFuelTypeSelected(type, selected);
+        if (selected) {
+          widget.onFuelTypeSelected(type);
+        }
       },
     );
   }

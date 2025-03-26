@@ -1,4 +1,5 @@
 // Datei: components/fuel_station/cubit/fuel_station_cubit.dart
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -51,11 +52,11 @@ class FuelStationCubit extends Cubit<FuelStationState> with LoggerMixin {
     );
   }
 
-  // Öffentliche Methode zum Neuladen mit spezifischem Radius
   Future<void> loadFuelStationsWithRadius(
-      LatLng location, double radius) async {
+    LatLng location,
+    double radius,
+  ) async {
     if (state is FuelStationLoaded) {
-      // Vorherigen Zustand beibehalten, nur Loading-Flag setzen
       emit((state as FuelStationLoaded).toFuelStationLoading());
     } else {
       emit(FuelStationLoading(userLocation: location));
@@ -68,7 +69,6 @@ class FuelStationCubit extends Cubit<FuelStationState> with LoggerMixin {
     );
   }
 
-  // Private Methode mit allen Parametern für den API-Aufruf
   Future<void> _loadFuelStationsWithParams({
     required double lat,
     required double lng,
@@ -79,24 +79,26 @@ class FuelStationCubit extends Cubit<FuelStationState> with LoggerMixin {
     try {
       log.info('Lade Tankstellen mit Radius: $radius km');
 
-      final FuelStationPage<FuelStation> fuelStations =
-          await _fuelService.getFuelStationInRadius(
-        lat: lat,
-        lng: lng,
-        radius: radius,
-        type: type,
-        sort: sort,
-      );
+      if (state case final FuelStationLoading loadingState) {
+        final FuelStationPage<FuelStation> fuelStations =
+            await _fuelService.getFuelStationInRadius(
+          lat: lat,
+          lng: lng,
+          radius: radius,
+          type: type,
+          sort: sort,
+        );
 
-      emit(
-        FuelStationLoaded(
-          fuelStations: fuelStations,
-          userLocation: LatLng(lat, lng),
-        ),
-      );
+        emit(
+          loadingState.toFuelStationLoaded(
+            selectedFuelTypes: type,
+            fuelStations: fuelStations,
+            userLocation: LatLng(lat, lng),
+          ),
+        );
+      }
     } catch (e) {
       log.severe('Fehler beim Laden der Tankstellen: $e');
-      // Fehlerbehandlung hinzufügen
       emit(
         FuelStationError(
           message: 'Fehler beim Laden der Tankstellen: $e',
@@ -106,55 +108,89 @@ class FuelStationCubit extends Cubit<FuelStationState> with LoggerMixin {
     }
   }
 
-  List<FuelStation> filterStations(List<FuelStation> stations) {
-    if (state.selectedFuelTypes.contains(FuelType.all)) {
-      return stations;
-    }
+  List<FuelStation> filterStations(FuelType type) {
+    if (state case final FuelStationLoaded loadedState) {
+      final List<FuelStation> filteredStations = List<FuelStation>.of(
+        loadedState.fuelStations.stations ?? <FuelStation>[],
+      );
 
-    return stations.where((FuelStation station) {
-      if (state.selectedFuelTypes.contains(FuelType.diesel) &&
-          station.diesel != null) {
-        return true;
-      }
-      if (state.selectedFuelTypes.contains(FuelType.e5) && station.e5 != null) {
-        return true;
-      }
-      if (state.selectedFuelTypes.contains(FuelType.e10) &&
-          station.e10 != null) {
-        return true;
-      }
-      return false;
-    }).toList();
+      final List<FuelStation> stations = List<FuelStation>.of(
+        loadedState.fuelStations.stations ?? <FuelStation>[],
+      );
+
+      // Nach dem ausgewählten Kraftstofftyp sortieren
+      stations.sort((FuelStation a, FuelStation b) {
+        double? priceA;
+        double? priceB;
+
+        switch (type) {
+          case FuelType.diesel:
+            priceA = a.diesel;
+            priceB = b.diesel;
+            break;
+          case FuelType.e5:
+            priceA = a.e5;
+            priceB = b.e5;
+            break;
+          case FuelType.e10:
+            priceA = a.e10;
+            priceB = b.e10;
+            break;
+          case FuelType.all:
+            priceA = a.diesel ?? a.e5 ?? a.e10;
+            priceB = b.diesel ?? b.e5 ?? b.e10;
+            break;
+        }
+
+        if (priceA == null && priceB == null) {
+          return 0;
+        }
+
+        if (priceA == null) {
+          return 1;
+        }
+        if (priceB == null) {
+          return -1;
+        }
+
+        // Sonst sortiere aufsteigend nach dem Preis (günstigste zuerst)
+        return priceA.compareTo(priceB);
+      });
+
+      return filteredStations;
+    }
+    return <FuelStation>[];
   }
 
   void onRadiusChanged(double radius) {
-    if (state is FuelStationLoaded) {
+    if (state case final FuelStationLoaded loadedState) {
+      loadFuelStationsWithRadius(
+        loadedState.userLocation!,
+        radius,
+      );
       emit(state.copyWith(searchRadius: radius));
     }
   }
 
-  void onFuelTypeSelected(FuelType type, bool selected) {
-    final List<FuelType> _selectedFuelTypes =
-        List<FuelType>.of(state.selectedFuelTypes);
-    // Wenn "Alle" ausgewählt wird, leere die anderen Filter
-    if (type == FuelType.all && selected) {
-      _selectedFuelTypes
-        ..clear()
-        ..add(FuelType.all);
-    } else if (selected) {
-      // Wenn ein spezifischer Typ hinzugefügt wird, entferne "Alle"
-      _selectedFuelTypes
-        ..remove(FuelType.all)
-        ..add(type);
-    } else {
-      // Wenn ein Typ entfernt wird
-      _selectedFuelTypes.remove(type);
-      // Wenn kein Filter mehr ausgewählt ist, wähle "Alle"
-      if (_selectedFuelTypes.isEmpty) {
-        _selectedFuelTypes.add(FuelType.all);
-      }
-    }
+  void onFuelTypeSelected(FuelType type) {
+    if (state case final FuelStationLoaded loadedState) {
+      final List<FuelStation> stations = filterStations(type);
 
-    emit(state.copyWith(selectedFuelTypes: _selectedFuelTypes.toSet()));
+      emit(
+        loadedState.copyWith(
+          selectedFuelType: type,
+          fuelStations: FuelStationPage<FuelStation>(
+            ok: true,
+            status: loadedState.fuelStations.status,
+            message: loadedState.fuelStations.message,
+            stations: stations,
+          ),
+        ),
+      );
+
+      log.info(
+        'Stationen nach $type sortiert. ${stations.length} Stationen verfügbar.',
+      );
+    }
   }
 }

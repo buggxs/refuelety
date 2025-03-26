@@ -1,20 +1,20 @@
 // Datei: components/fuel_station/cubit/fuel_station_state.dart
 part of 'fuel_station_cubit.dart';
 
-abstract class FuelStationState {
+abstract class FuelStationState implements Equatable {
   FuelStationState({
     this.userLocation,
-    this.selectedFuelTypes = const <FuelType>{},
+    this.selectedFuelType = FuelType.diesel,
     this.searchRadius = 5,
   });
 
   final LatLng? userLocation;
-  final Set<FuelType> selectedFuelTypes;
+  final FuelType selectedFuelType;
   final double searchRadius;
 
   FuelStationState copyWith({
     LatLng? userLocation,
-    Set<FuelType>? selectedFuelTypes,
+    FuelType? selectedFuelType,
     double? searchRadius,
   });
 }
@@ -25,50 +25,71 @@ class FuelStationInitial extends FuelStationState {
   @override
   FuelStationState copyWith({
     LatLng? userLocation,
-    Set<FuelType>? selectedFuelTypes,
+    FuelType? selectedFuelType,
     double? searchRadius,
   }) {
     return FuelStationInitial();
   }
+
+  @override
+  List<Object?> get props => <Object?>[
+        userLocation,
+        selectedFuelType,
+        searchRadius,
+      ];
+
+  @override
+  bool? get stringify => throw UnimplementedError();
 }
 
 class FuelStationLoading extends FuelStationState {
   FuelStationLoading({
     super.userLocation,
-    super.selectedFuelTypes = const <FuelType>{},
+    super.selectedFuelType,
     super.searchRadius = 5,
   });
 
   FuelStationLoaded toFuelStationLoaded({
     required FuelStationPage<FuelStation> fuelStations,
-    Set<FuelType> selectedFuelTypes = const <FuelType>{},
+    FuelType? selectedFuelTypes,
+    LatLng? userLocation,
   }) {
     return FuelStationLoaded(
       fuelStations: fuelStations,
-      userLocation: userLocation!,
-      selectedFuelTypes: selectedFuelTypes,
+      userLocation: userLocation ?? this.userLocation!,
+      selectedFuelType: selectedFuelType,
     );
   }
 
   @override
   FuelStationState copyWith({
     LatLng? userLocation,
-    Set<FuelType>? selectedFuelTypes,
+    FuelType? selectedFuelType,
     double? searchRadius,
   }) {
     return FuelStationLoading(
       userLocation: userLocation ?? this.userLocation,
-      selectedFuelTypes: selectedFuelTypes ?? this.selectedFuelTypes,
+      selectedFuelType: selectedFuelType ?? this.selectedFuelType,
       searchRadius: searchRadius ?? this.searchRadius,
     );
   }
+
+  @override
+  List<Object?> get props => <Object?>[
+        userLocation,
+        selectedFuelType,
+        searchRadius,
+      ];
+
+  @override
+  bool? get stringify => throw UnimplementedError();
 }
 
 class FuelStationLoaded extends FuelStationState {
   FuelStationLoaded({
     required this.fuelStations,
     required LatLng userLocation,
-    super.selectedFuelTypes = const <FuelType>{},
+    super.selectedFuelType,
     super.searchRadius = 5,
   }) : super(
           userLocation: userLocation,
@@ -79,14 +100,14 @@ class FuelStationLoaded extends FuelStationState {
   FuelStationLoading toFuelStationLoading() {
     return FuelStationLoading(
       userLocation: userLocation,
-      selectedFuelTypes: selectedFuelTypes,
+      selectedFuelType: selectedFuelType,
     );
   }
 
   @override
   FuelStationLoaded copyWith({
     LatLng? userLocation,
-    Set<FuelType>? selectedFuelTypes,
+    FuelType? selectedFuelType,
     double? searchRadius,
     FuelStationPage<FuelStation>? fuelStations,
   }) {
@@ -94,16 +115,27 @@ class FuelStationLoaded extends FuelStationState {
       fuelStations: fuelStations ?? this.fuelStations,
       userLocation: userLocation ?? this.userLocation!,
       searchRadius: searchRadius ?? this.searchRadius,
-      selectedFuelTypes: selectedFuelTypes ?? this.selectedFuelTypes,
+      selectedFuelType: selectedFuelType ?? this.selectedFuelType,
     );
   }
+
+  @override
+  List<Object?> get props => <Object?>[
+        userLocation,
+        selectedFuelType,
+        searchRadius,
+        fuelStations,
+      ];
+
+  @override
+  bool? get stringify => throw UnimplementedError();
 }
 
 class FuelStationError extends FuelStationState {
   FuelStationError({
     required this.message,
     super.userLocation,
-    super.selectedFuelTypes,
+    super.selectedFuelType,
   });
 
   final String message;
@@ -111,13 +143,24 @@ class FuelStationError extends FuelStationState {
   @override
   FuelStationState copyWith({
     LatLng? userLocation,
-    Set<FuelType>? selectedFuelTypes,
+    FuelType? selectedFuelType,
     double? searchRadius,
   }) {
     return FuelStationError(
       message: message,
       userLocation: userLocation ?? this.userLocation,
-      selectedFuelTypes: selectedFuelTypes ?? this.selectedFuelTypes,
+      selectedFuelType: selectedFuelType ?? this.selectedFuelType,
     );
   }
+
+  @override
+  List<Object?> get props => <Object?>[
+        userLocation,
+        selectedFuelType,
+        searchRadius,
+        message,
+      ];
+
+  @override
+  bool? get stringify => throw UnimplementedError();
 }
