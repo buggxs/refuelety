@@ -45,7 +45,7 @@ class _FuelStationFilterState extends State<FuelStationFilter> {
           bottomLeft: Radius.circular(16),
           bottomRight: Radius.circular(16),
         ),
-        boxShadow: [
+        boxShadow: <BoxShadow>[
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
@@ -116,7 +116,8 @@ class _FuelStationFilterState extends State<FuelStationFilter> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              'Suchradius: ${_currentRadius.toStringAsFixed(0)} km',
+                              'Suchradius: ${_currentRadius.toStringAsFixed(0)}'
+                              ' km',
                               style: theme.textTheme.bodyMedium,
                             ),
                             Slider(

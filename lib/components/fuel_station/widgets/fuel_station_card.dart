@@ -269,7 +269,7 @@ class FuelStationCard extends StatelessWidget {
     }
 
     if (station.postCode != null || station.place != null) {
-      final String locationPart = [
+      final String locationPart = <String?>[
         if (station.postCode != null) station.postCode.toString(),
         if (station.place != null) station.place,
       ].join(' ');

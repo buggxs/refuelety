@@ -184,7 +184,8 @@ class FuelStationCubit extends Cubit<FuelStationState> with LoggerMixin {
       );
 
       log.info(
-        'Stationen nach $type sortiert. ${stations.length} Stationen verfügbar.',
+        'Stationen nach $type sortiert. '
+        '${stations.length} Stationen verfügbar.',
       );
     }
   }
