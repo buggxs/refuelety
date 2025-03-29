@@ -16,6 +16,7 @@ analyzer:
     implicit-dynamic: false
   errors:
     # treat missing required parameters as a warning (not a hint)
+    cascade_invocations: ignore
     missing_required_param: warning
     # treat missing returns as a warning (not a hint)
     missing_return: warning
