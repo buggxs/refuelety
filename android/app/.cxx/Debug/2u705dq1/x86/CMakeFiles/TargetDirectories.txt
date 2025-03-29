@@ -1,0 +1,2 @@
+E:/Apps/refuelety/android/app/.cxx/Debug/2u705dq1/x86/CMakeFiles/edit_cache.dir
+E:/Apps/refuelety/android/app/.cxx/Debug/2u705dq1/x86/CMakeFiles/rebuild_cache.dir
