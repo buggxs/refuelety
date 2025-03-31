@@ -87,7 +87,7 @@ class MapView extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       margin: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.8),
+                        color: Colors.red.withValues(alpha: 0.8),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
