@@ -21,7 +21,7 @@ class CustomMarkerGenerator {
       ..style = PaintingStyle.fill;
 
     final Paint shadowPaint = Paint()
-      ..color = Colors.black.withOpacity(0.2)
+      ..color = Colors.black.withValues(alpha: 0.2)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
 
     final Path tooltipPath = Path()
